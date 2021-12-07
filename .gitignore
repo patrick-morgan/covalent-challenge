@@ -128,6 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Annoying mac files
+.DS_Store
+
 **/node_modules/*
 
 **/*.swp
