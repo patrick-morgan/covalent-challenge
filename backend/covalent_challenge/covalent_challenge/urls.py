@@ -20,8 +20,15 @@ from matchmaker import views
 
 router = routers.DefaultRouter()
 router.register(r'todos', views.TodoView, 'todo')
+router.register(r'users', views.UsersView, 'user')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('matches/', views.MatchesList.as_view()),
+    path('users', views.UsersList.as_view()),
+    path('delete/<int:pk>/', views.MatchDelete.as_view(), name='delete-match'),
+    path('create/', views.MatchCreate.as_view(), name='create-match'),
+    path('generate-matches/', views.generateMatches),
+    path('needs-matching/', views.usersNeedMatch.as_view(), name='needs-matching'),
 ]
