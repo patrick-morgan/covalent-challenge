@@ -31,7 +31,6 @@ function App() {
   const [dictUsers, setDictUsers] = useState<UserDict>({});
   const [matches, setMatches] = useState<match[]>([]);
   const [needsMatch, setNeedsMatch] = useState<user[]>([]);
-  const [checked, setChecked] = useState<number[]>([]);
   const [firstValue, setFirstValue] = useState<number>(-10);
   const [secondValue, setSecondValue] = useState<number>(-10);
   const [ticker, setTicker] = useState(true);
@@ -39,10 +38,10 @@ function App() {
   useEffect(() => {
     refreshUsers();
     refreshMatches();
-    refreshNeedsMatching();
   }, []);
 
   const refreshUsers = async () => {
+    setIsLoading(true);
     await axios
       .get("/api/users/")
       .then((res) => {
@@ -50,9 +49,11 @@ function App() {
         setUsers(res.data);
       })
       .catch((err) => console.log(err));
+    setIsLoading(false);
   };
 
   const refreshMatches = async () => {
+    setIsLoading(true);
     await axios
       .get("/matches/")
       .then((res) => {
@@ -61,6 +62,7 @@ function App() {
         setMatches(res.data);
       })
       .catch((err) => console.log(err));
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -75,12 +77,11 @@ function App() {
         console.log("needs-matching:");
         console.log(res);
         setNeedsMatch(res.data);
-        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setIsLoading(false);
       });
+    setIsLoading(false);
   };
 
   const transformData = () => {
@@ -115,15 +116,12 @@ function App() {
         console.log(res);
         setFirstValue(-10);
         setSecondValue(-10);
-        // refreshUsers();
         refreshMatches();
-        // refreshNeedsMatching();
-        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setIsLoading(false);
       });
+    setIsLoading(true);
   };
 
   const handleChange = (user_id: number) => {
@@ -201,8 +199,10 @@ function App() {
                 {needsMatch && needsMatch.length > 0 ? (
                   <>
                     <p>
-                      Click the buttons to the right of the users to match the
-                      users!
+                      Click the buttons in the 'Select' column to select users
+                      for matching. Once you have selected two users, match them
+                      by clicking the 'match' button below. Only two users can
+                      be matched at once.
                     </p>
                     <table>
                       <thead>
@@ -280,17 +280,13 @@ function App() {
                 </div>
                 <p>
                   Click the button to the right of each row to unmatch the
-                  users!<br></br>
-                  Traits that each match had in common are shown below.
-                  Interests being 0 means they had no interests in common.
+                  users.<br></br>
+                  The traits that each match had in common are listed below. The
+                  interests column lists the number of interests the users had
+                  in commmon.
                 </p>
-                {/* <div className=""></div> */}
                 <table>
                   <thead>
-                    {/* <tr>
-                    <th>Names</th>
-                    <th>Relevant Traits</th>
-                  </tr> */}
                     <tr>
                       <th>Name</th>
                       <th>Name</th>
@@ -320,8 +316,6 @@ function App() {
                               dictUsers[match.user1].years}
                           </td>
                           <td>
-                            {/* {(dictUsers[match.user1].years === dictUsers[match.user2].years) && "Yrs Exp "} */}
-                            {/* {(dictUsers[match.user1]. === dictUsers[match.user2].years) && "Yrs Exp"} */}
                             {dictUsers[match.user1].interests.reduce(
                               (sum: number, curr: string, currIdx: number) => {
                                 if (
