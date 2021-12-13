@@ -16,7 +16,7 @@ def connect():
   # Create the user table
   cur.execute("CREATE TABLE IF NOT EXISTS users (user_id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, city VARCHAR(255) NOT NULL, years SMALLINT NOT NULL, interests TEXT[] NOT NULL);")
   # Create the match table
-  cur.execute('CREATE TABLE IF NOT EXISTS matches (match_id SERIAL PRIMARY KEY, user1 INT NOT NULL, user2 INT NOT NULL, FOREIGN KEY (user1) REFERENCES users (user_id), FOREIGN KEY (user2) REFERENCES users (user_id));')
+  cur.execute('CREATE TABLE IF NOT EXISTS matches (match_id SERIAL PRIMARY KEY, user1_id INT NOT NULL, user2_id INT NOT NULL, FOREIGN KEY (user1_id) REFERENCES users (user_id), FOREIGN KEY (user2_id) REFERENCES users (user_id));')
   print("Tables created successfully!")
   rowNum = 0
   # Import data from csv file
